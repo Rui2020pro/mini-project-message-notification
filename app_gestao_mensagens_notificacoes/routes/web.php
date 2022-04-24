@@ -1,5 +1,6 @@
 <?php
 
+use App\Mail\EmailAuth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,3 +27,10 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
  * Mensagem Resource
  */
 Route::resource('mensagens', App\Http\Controllers\MensagemController::class)->middleware('auth');
+
+/**
+ * Email Auth
+ */
+Route::get('/email', function () {
+    return new EmailAuth();
+});
