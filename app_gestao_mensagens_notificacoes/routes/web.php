@@ -21,3 +21,8 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+/**
+ * Mensagem Resource
+ */
+Route::resource('mensagens', App\Http\Controllers\MensagemController::class)->middleware('auth');
