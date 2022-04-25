@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Mensagem;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Mail;
+use \App\Mail\NovaMensagemMail;
 class MensagemController extends Controller
 {
     /**
@@ -24,7 +25,7 @@ class MensagemController extends Controller
      */
     public function create()
     {
-        //
+        return view('mensagens.create_edit');
     }
 
     /**
@@ -35,18 +36,44 @@ class MensagemController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $regras = [
+            'mensagem' => 'required|string|max:255',
+        ];
+
+        $feedback = [
+            'mensagem.required' => 'O campo Mensagem é obrigatório.',
+            'mensagem.string' => 'O campo Mensagem deve ser uma string.',
+            'mensagem.max' => 'O campo Mensagem deve ter no máximo 255 caracteres.',
+        ];
+
+        $validacao = $request->validate($regras, $feedback);
+
+        if ($validacao) {
+            $mensagem = new Mensagem();
+            $mensagem->mensagem = $request->mensagem;
+            $mensagem->user_id = auth()->user()->id;
+            $mensagem->save();
+
+            // Enviar email
+            $email = auth()->user()->email;
+            Mail::to($email)->send(new NovaMensagemMail($mensagem));
+
+            return redirect()->route('mensagens.show', $mensagem->id);
+        } else{
+            return redirect()->route('mensagens.create')->withErrors($validacao);
+        }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Mensagem  $mensagem
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Mensagem $mensagem)
+    public function show(int $id)
     {
-        //
+        $mensagem = Mensagem::find($id);
+        return view('mensagens.show', compact('mensagem'));
     }
 
     /**
