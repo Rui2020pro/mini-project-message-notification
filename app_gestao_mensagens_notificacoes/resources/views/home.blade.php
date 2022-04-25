@@ -14,7 +14,18 @@
                         </div>
                     @endif
 
-                    {{ __('You are logged in!') }}
+                    <h4>Olá {{ Auth::user()->name }}</h4>
+                    <p> Bem-vindo ao seu painel de gestão de mensagens e notificações.
+                        Para começar, clique no botão abaixo para criar uma nova mensagem.
+                        <a href="{{ route('mensagens.create') }}" class="btn btn-primary">
+                            {{ __('Criar Mensagem') }}
+                        </a>
+                    </p>
+                    <p> Para ver as mensagens existentes, clique no seguinte botão.
+                        <a href="{{ route('mensagens.index') }}" class="btn btn-primary">
+                            {{ __('Ver Mensagens') }}
+                        </a>
+                    </p>
                 </div>
             </div>
         </div>
