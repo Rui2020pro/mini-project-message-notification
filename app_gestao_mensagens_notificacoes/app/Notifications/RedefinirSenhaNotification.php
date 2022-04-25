@@ -17,9 +17,10 @@ class RedefinirSenhaNotification extends Notification
      *
      * @return void
      */
-    public function __construct($token)
+    public function __construct($token, $email)
     {
         $this->token = $token;
+        $this->email = $email;
     }
 
     /**
@@ -42,8 +43,8 @@ class RedefinirSenhaNotification extends Notification
     public function toMail($notifiable)
     {
         $url = url(route('password.reset', [
-            'token' => $this->_token,
-            'email' => $this->_email,
+            'token' => $this->token,
+            'email' => $this->email,
         ]), false);
 
         $expire = config('auth.passwords.'.config('auth.defaults.passwords').'.expire');
@@ -55,7 +56,7 @@ class RedefinirSenhaNotification extends Notification
             ->action('Clique aqui para recuperar a password' , $url)
             ->line('O link da password vai ser expirado em '.$expire.' minutos.')
             ->line('Se não solicitou nenhuma requisição, por favor ignore este email.')
-            ->salutation('A equipa do '.config('app.name'));
+            ->salutation('A equipa do '.config('app.name')); // 217 video
     }
 
     /**
