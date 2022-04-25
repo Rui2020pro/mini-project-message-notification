@@ -25,7 +25,7 @@
     <link href="{{ asset('css/fontawesome-free-6.1.1-web/css/all.min.css') }}" rel="stylesheet">
 
     <!-- Data Tables -->
-    <link href="//cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" rel="stylesheet">
 </head>
 <body>
     <div id="app">
@@ -90,9 +90,15 @@
 </body>
 </html>
 
-<script src="//cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
 <script>
     $(document).ready(function() {
-        $('#example').DataTable();
-    } );
+        $('#table-list-messages').DataTable({
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.11.5/i18n/pt-BR.json"
+            }
+        });
+    });
 </script>

@@ -18,7 +18,8 @@ class MensagemController extends Controller
         // recover only messages that are not deleted and order by created_at and limit to 10 and associated with user
         $mensagens = Mensagem::where('user_id', auth()->user()->id)
                                 ->where('deleted_at', null)
-                                ->orderBy('created_at', 'desc')->paginate(10);
+                                ->orderBy('created_at', 'desc')
+                                ->paginate(10);
 
         return view('mensagens.index', compact('mensagens'));
     }
@@ -58,10 +59,10 @@ class MensagemController extends Controller
             $mensagem->mensagem = $request->mensagem;
             $mensagem->user_id = auth()->user()->id;
 
-            $recordId = $mensagem->save();
+            $mensagem->save();
 
-            $position = $mensagem->getPosition($recordId);
-            $mensagem->setPosition($recordId, $position);
+            $position = $mensagem->getPosition($mensagem->id);
+            $mensagem->setPosition($mensagem->id, $position);
 
             // Enviar email
             $email = auth()->user()->email;

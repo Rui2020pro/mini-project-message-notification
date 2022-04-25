@@ -25,9 +25,7 @@ class Mensagem extends Model
         ->where('deleted_at', null)
         ->latest('position')->first();
 
-        if ($max_position == 0) {
-            $position = $max_position->position + 1;
-        }
+        $position = $max_position->position + 1;
 
         return $position;
 

@@ -4,8 +4,15 @@
 
 <div class="container">
 
+    <div class="d-flex justify-content-between">
+        <h3>Lista de Mensagens</h3>
+        <a href="{{ route('mensagens.create') }}" class="btn btn-primary">
+            {{ __('Nova Mensagem') }}
+        </a>
+    </div>
+
     <!-- Table -->
-    <table class="table table-striped table-bordered table-hover table-condensed">
+    <table class="table table-striped table-bordered table-hover table-condensed" id="table-list-messages">
         <thead>
             <tr>
                 <th>ID</th>
