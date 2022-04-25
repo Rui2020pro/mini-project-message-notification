@@ -2,30 +2,49 @@
 
 namespace App\Notifications;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\URL;
 
 class VerifyEmailNotification extends Notification
 {
-    use Queueable;
 
     /**
-     * Create a new notification instance.
-     *
-     * @return void
+     * $name - Variable to store the name of the user
      */
-    public function __construct()
+    public $name;
+
+
+    /**
+     * Get the user name 
+     */
+    public function __construct($name)
     {
-        //
+        $this->name = $name;
     }
 
     /**
-     * Get the notification's delivery channels.
+     * The callback that should be used to create the verify email URL.
+     *
+     * @var \Closure|null
+     */
+    public static $createUrlCallback;
+
+    /**
+     * The callback that should be used to build the mail message.
+     *
+     * @var \Closure|null
+     */
+    public static $toMailCallback;
+
+    /**
+     * Get the notification's channels.
      *
      * @param  mixed  $notifiable
-     * @return array
+     * @return array|string
      */
     public function via($notifiable)
     {
@@ -33,31 +52,82 @@ class VerifyEmailNotification extends Notification
     }
 
     /**
-     * Get the mail representation of the notification.
+     * Build the mail representation of the notification.
      *
      * @param  mixed  $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
-            ->subject('Verifique o seu endereço de email')
-            ->line('Por favor, clique no link para verificar o seu endereço de email!')
-            ->action('Verificar endereço de email', url(route('verification.verify', $notifiable->verification_token), false))
-            ->line('Se não criou nenhuma conta, então nenhuma ação será efetuada')
-            ->salutation('A equipa do '.config('app.name'));
+        $verificationUrl = $this->verificationUrl($notifiable);
+
+        if (static::$toMailCallback) {
+            return call_user_func(static::$toMailCallback, $notifiable, $verificationUrl);
+        }
+
+        return $this->buildMailMessage($verificationUrl);
     }
 
     /**
-     * Get the array representation of the notification.
+     * Get the verify email notification mail message for the given URL.
+     *
+     * @param  string  $url
+     * @return \Illuminate\Notifications\Messages\MailMessage
+     */
+    protected function buildMailMessage($url)
+    {
+        return (new MailMessage)
+            ->subject('Verifique o seu endereço de email')
+            ->greeting('Olá '. $this->name)
+            ->line('Por favor, clique no link para verificar o seu endereço de email!')
+            ->action('Verificar endereço de email', $url)
+            ->line('Se não criou nenhuma conta, então nenhuma ação será efetuada')
+            ->salutation('A equipa do '.config('app.name'));
+        
+    }
+
+    /**
+     * Get the verification URL for the given notifiable.
      *
      * @param  mixed  $notifiable
-     * @return array
+     * @return string
      */
-    public function toArray($notifiable)
+    protected function verificationUrl($notifiable)
     {
-        return [
-            //
-        ];
+        if (static::$createUrlCallback) {
+            return call_user_func(static::$createUrlCallback, $notifiable);
+        }
+
+        return URL::temporarySignedRoute(
+            'verification.verify',
+            Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)),
+            [
+                'id' => $notifiable->getKey(),
+                'hash' => sha1($notifiable->getEmailForVerification()),
+            ]
+        );
+    }
+
+    /**
+     * Set a callback that should be used when creating the email verification URL.
+     *
+     * @param  \Closure  $callback
+     * @return void
+     */
+    public static function createUrlUsing($callback)
+    {
+        static::$createUrlCallback = $callback;
+    }
+
+    /**
+     * Set a callback that should be used when building the notification mail message.
+     *
+     * @param  \Closure  $callback
+     * @return void
+     */
+    public static function toMailUsing($callback)
+    {
+        static::$toMailCallback = $callback;
     }
 }
+
