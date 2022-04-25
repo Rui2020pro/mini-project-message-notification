@@ -20,6 +20,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
    
     <!-- Font Awesome -->
     <link href="{{ asset('css/fontawesome-free-6.1.1-web/css/all.min.css') }}" rel="stylesheet">
@@ -75,6 +76,11 @@
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                         @csrf
                                     </form>
+
+                                    <!-- Editar Perfil -->
+                                    <a class="dropdown-item" href="{{ route('profile', Auth::user()->id) }}">
+                                        {{ __('Editar Perfil') }}
+                                    </a>
                                 </div>
                             </li>
                         @endguest
@@ -94,11 +100,22 @@
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
 <script>
+
+    /**
+     * DataTables
+     */
     $(document).ready(function() {
         $('#table-list-messages').DataTable({
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/1.11.5/i18n/pt-BR.json"
-            }
+            },
+
+            /**
+             * search only in the first column
+             */ 
+            "columnDefs": [
+                { "targets": [0], "searchable": false }
+            ]
         });
     });
 </script>

@@ -21,6 +21,10 @@ Route::get('/', function () {
 
 Auth::routes(['verify' => true]);
 
+// Edit Profile Route
+Route::get('/profile', 'ProfileController@index')->name('profile')->middleware('verified');
+Route::post('/profile', 'ProfileController@update')->name('profile.update')->middleware('verified');
+
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware('verified');
 
 /**

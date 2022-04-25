@@ -16,10 +16,10 @@ class MensagemController extends Controller
     public function index()
     {
         // recover only messages that are not deleted and order by created_at and limit to 10 and associated with user
-        $mensagens = Mensagem::where('user_id', auth()->user()->id)
-                                ->where('deleted_at', null)
-                                ->orderBy('created_at', 'desc')
-                                ->paginate(10);
+        $mensagens = Mensagem::all()
+                            ->where('user_id', auth()->user()->id)
+                            ->where('deleted_at', null)
+                            ->sortByDesc('created_at');
 
         return view('mensagens.index', compact('mensagens'));
     }
