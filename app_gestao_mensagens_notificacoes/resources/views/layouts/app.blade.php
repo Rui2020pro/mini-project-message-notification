@@ -23,6 +23,9 @@
    
     <!-- Font Awesome -->
     <link href="{{ asset('css/fontawesome-free-6.1.1-web/css/all.min.css') }}" rel="stylesheet">
+
+    <!-- Data Tables -->
+    <link href="//cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" rel="stylesheet">
 </head>
 <body>
     <div id="app">
@@ -86,3 +89,10 @@
     </div>
 </body>
 </html>
+
+<script src="//cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#example').DataTable();
+    } );
+</script>
