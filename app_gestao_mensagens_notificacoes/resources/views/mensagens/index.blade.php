@@ -28,7 +28,7 @@
                 <td>{{ $mensagem->id }}</td>
                 <td>{{ $mensagem->mensagem }}</td>
                 <td>{{ $mensagem->position }}</td>
-                <td>{{ $mensagem->created_at }}</td>
+                <td>{{ date('d/m/Y H:i:s', strtotime($mensagem->created_at)) }}</td>
                 <td>
                     <a href="{{ route('mensagens.show', $mensagem->id) }}" class="btn btn-primary btn-xs">
                         {{-- <i class="fa fa-eye"></i>--}}

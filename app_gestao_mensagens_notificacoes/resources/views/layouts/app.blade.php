@@ -67,6 +67,12 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+
+                                    <!-- Editar Perfil -->
+                                    <a class="dropdown-item" href="{{ route('user.edit', Auth::user()->id) }}">
+                                        {{ __('Editar Perfil') }}
+                                    </a>
+
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
@@ -76,11 +82,6 @@
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                         @csrf
                                     </form>
-
-                                    <!-- Editar Perfil -->
-                                    <a class="dropdown-item" href="{{ route('profile', Auth::user()->id) }}">
-                                        {{ __('Editar Perfil') }}
-                                    </a>
                                 </div>
                             </li>
                         @endguest

@@ -5,3 +5,8 @@ ul.pagination{
 ul.pagination li.paginate_button{
     padding: 0px !important;
 }
+
+ul.pagination li.paginate_button:hover{
+    border: none !important;
+    background: none !important;
+}

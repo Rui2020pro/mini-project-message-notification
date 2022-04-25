@@ -21,9 +21,12 @@ Route::get('/', function () {
 
 Auth::routes(['verify' => true]);
 
-// Edit Profile Route
-Route::get('/profile', 'ProfileController@index')->name('profile')->middleware('verified');
-Route::post('/profile', 'ProfileController@update')->name('profile.update')->middleware('verified');
+/**
+ * Edit Profile Route
+ */ 
+Route::resource('user', UserController::class)
+    ->middleware('verified')
+    ->only(['edit', 'update']);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware('verified');
 
@@ -31,6 +34,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
  * Mensagem Resource
  */
 Route::resource('mensagens', App\Http\Controllers\MensagemController::class)->middleware('auth')->middleware('verified');
+
 
 /**
  * Email Auth
