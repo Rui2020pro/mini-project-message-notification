@@ -19,14 +19,14 @@ Route::get('/', function () {
     return view('/auth.login');
 });
 
-Auth::routes();
+Auth::routes(['verify' => true]);
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware('verified');
 
 /**
  * Mensagem Resource
  */
-Route::resource('mensagens', App\Http\Controllers\MensagemController::class)->middleware('auth');
+Route::resource('mensagens', App\Http\Controllers\MensagemController::class)->middleware('auth')->middleware('verified');
 
 /**
  * Email Auth
