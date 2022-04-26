@@ -95,7 +95,15 @@ class MensagemController extends Controller
     public function edit(int $id)
     {
         $mensagem = Mensagem::find($id);
-        return view('mensagens.create_edit', compact('mensagem'));
+
+        /**
+         * Verifica se o usuário logado é o mesmo que criou a mensagem
+         */
+        if (auth()->user()->id == $mensagem->user_id) {
+            return view('mensagens.create_edit', compact('mensagem'));
+        } else {
+            return redirect()->route('mensagens.index')->with('toast_error', 'Você não tem permissão para editar esta mensagem.');
+        }
     }
 
     /**
@@ -120,13 +128,21 @@ class MensagemController extends Controller
         $validacao = $request->validate($regras, $feedback);
 
         if ($validacao) {
+            
+            /**
+             * Check if message is not deleted and is associated with user
+             */
             $mensagem = Mensagem::find($id);
-            $mensagem->mensagem = $request->mensagem;
-            $mensagem->user_id = auth()->user()->id;
 
-            $mensagem->update();
+            if ($mensagem->user_id == auth()->user()->id && $mensagem->deleted_at == null) {
+                $mensagem->mensagem = $request->mensagem;
+                $mensagem->update();
 
-            return redirect()->route('mensagens.show', $mensagem->id)->with('toast_success', 'Mensagem atualizada com sucesso!');
+                return redirect()->route('mensagens.show', $mensagem->id)->with('toast_success', 'Mensagem atualizada com sucesso!');
+            } else {
+                return redirect()->route('mensagens.index')->with('toast_error', 'Mensagem não encontrada ou não pertence ao utilizador!');
+            }
+
         } else{
             return redirect()->route('mensagens.edit', $id)->withErrors($validacao);
         }
