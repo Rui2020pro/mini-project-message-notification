@@ -151,11 +151,20 @@ class MensagemController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Mensagem  $mensagem
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Mensagem $mensagem)
+    public function destroy(int $id = 0 )
     {
-        //
+        // Before delete, ask if user really wants to delete using sweetalert
+        $mensagem = Mensagem::find($id);
+
+        if ($mensagem->user_id == auth()->user()->id && $mensagem->deleted_at == null) {
+
+            $mensagem->delete();
+            return redirect()->route('mensagens.index')->with('toast_success', 'Mensagem apagada com sucesso!');
+        } else {
+            return redirect()->route('mensagens.index')->with('toast_error', 'Mensagem não encontrada ou não pertence ao utilizador!');
+        }
     }
 }

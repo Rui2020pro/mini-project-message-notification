@@ -38,10 +38,34 @@
                         <i class="fa fa-pencil"></i>
                         Editar
                     </a>
-                    <a href="{{ route('mensagens.destroy', $mensagem->id) }}" class="btn btn-danger btn-xs" data-id="{{ $mensagem->id }}" data-url="{{ route('mensagens.destroy', $mensagem->id) }}">
+                    <!-- Before delete msg , ask to the user with toast warning if he really wants to delete the msg -->
+                    <button type="button" class="btn btn-danger btn-xs" data-bs-toggle="modal" data-bs-target="#modal-delete-msg" data-id="{{ $mensagem->id }}" data-url="{{ route('mensagens.destroy', $mensagem->id) }}">
                         <i class="fa fa-trash"></i>
                         Excluir
-                    </a>
+                    </button>
+                    <!-- Modal -->
+                    <div class="modal fade" id="modal-delete-msg" tabindex="-1" role="dialog" aria-labelledby="modal-delete-msg-label" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modal-delete-msg-label">Excluir Mensagem</h5>
+                                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                        <span class="btn btn-danger" aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Deseja realmente excluir a mensagem?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <form id="form-delete-msg" action="{{ route('mensagens.destroy', $mensagem->id) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger">Excluir</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                 </td>
             </tr>
             @endforeach
@@ -49,5 +73,6 @@
     </table>
 
 </div>
+@include('sweetalert::alert')
 
 @endsection
