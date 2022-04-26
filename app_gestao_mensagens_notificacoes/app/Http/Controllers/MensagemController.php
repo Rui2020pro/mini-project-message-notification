@@ -89,24 +89,47 @@ class MensagemController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Mensagem  $mensagem
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Mensagem $mensagem)
+    public function edit(int $id)
     {
-        //
+        $mensagem = Mensagem::find($id);
+        return view('mensagens.create_edit', compact('mensagem'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Mensagem  $mensagem
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Mensagem $mensagem)
+    public function update(Request $request, int $id = 0)
     {
-        //
+        $regras = [
+            'mensagem' => 'required|string|max:255',
+        ];
+
+        $feedback = [
+            'mensagem.required' => 'O campo Mensagem é obrigatório.',
+            'mensagem.string' => 'O campo Mensagem deve ser uma string.',
+            'mensagem.max' => 'O campo Mensagem deve ter no máximo 255 caracteres.',
+        ];
+
+        $validacao = $request->validate($regras, $feedback);
+
+        if ($validacao) {
+            $mensagem = Mensagem::find($id);
+            $mensagem->mensagem = $request->mensagem;
+            $mensagem->user_id = auth()->user()->id;
+
+            $mensagem->update();
+
+            return redirect()->route('mensagens.show', $mensagem->id)->with('toast_success', 'Mensagem atualizada com sucesso!');
+        } else{
+            return redirect()->route('mensagens.edit', $id)->withErrors($validacao);
+        }
     }
 
     /**
