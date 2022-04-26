@@ -27,14 +27,23 @@
 
     <!-- Data Tables -->
     <link href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" rel="stylesheet">
+
 </head>
 <body>
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
+
+                <!-- Check if user is logged in -->
+                @guest
+                    <a class="navbar-brand" href="{{ url('/') }}">
+                        {{ config('app.name', 'Gestão de Mensagens e Notificações') }}
+                    </a>
+                @else
+                    <a class="navbar-brand" href="{{ url('/home') }}">
+                        {{ config('app.name', 'Gestão de Mensagens e Notificações') }}
+                    </a>
+                @endguest
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -94,18 +103,22 @@
             @yield('content')
         </main>
     </div>
+    @include('sweetalert::alert')
 </body>
 </html>
 
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+
 <script>
 
-    /**
-     * DataTables
-     */
     $(document).ready(function() {
+
+        /**
+         * DataTables
+         */
+
         $('#table-list-messages').DataTable({
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/1.11.5/i18n/pt-BR.json"
@@ -119,4 +132,5 @@
             ]
         });
     });
+
 </script>

@@ -68,7 +68,7 @@ class MensagemController extends Controller
             $email = auth()->user()->email;
             Mail::to($email)->send(new NovaMensagemMail($mensagem));
 
-            return redirect()->route('mensagens.show', $mensagem->id);
+            return redirect()->route('mensagens.show', $mensagem->id)->with('toast_success', 'Mensagem criada com sucesso!');
         } else{
             return redirect()->route('mensagens.create')->withErrors($validacao);
         }

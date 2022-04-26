@@ -30,17 +30,18 @@
                 <td>{{ $mensagem->position }}</td>
                 <td>{{ date('d/m/Y H:i:s', strtotime($mensagem->created_at)) }}</td>
                 <td>
-                    <a href="{{ route('mensagens.show', $mensagem->id) }}" class="btn btn-primary btn-xs">
+                    <a href="{{ route('mensagens.show', $mensagem->id) }}" class="btn btn-primary btn-xs" data-id="{{ $mensagem->id }}" data-url="{{ route('mensagens.show', $mensagem->id) }}">
                         {{-- <i class="fa fa-eye"></i>--}}
                         Visualizar
                     </a>
-                    <a href="{{ route('mensagens.edit', $mensagem->id) }}" class="btn btn-warning btn-xs">
+                    <a href="{{ route('mensagens.edit', $mensagem->id) }}" class="btn btn-warning btn-xs" data-id="{{ $mensagem->id }}" data-url="{{ route('mensagens.edit', $mensagem->id) }}">
+                        {{-- <i class="fa fa-pencil"></i>--}}
                         {{-- <i class="fa fa-pencil"></i>--}}
                         Editar
                     </a>
-                    <a href="{{ route('mensagens.destroy', $mensagem->id) }}" class="btn btn-danger btn-xs">
-                        {{-- <i class="fa fa-trash"></i> --}}
-                        Eliminar
+                    <a href="{{ route('mensagens.destroy', $mensagem->id) }}" class="btn btn-danger btn-xs" data-id="{{ $mensagem->id }}" data-url="{{ route('mensagens.destroy', $mensagem->id) }}">
+                        {{-- <i class="fa fa-trash"></i>--}}
+                        Excluir
                     </a>
                 </td>
             </tr>
