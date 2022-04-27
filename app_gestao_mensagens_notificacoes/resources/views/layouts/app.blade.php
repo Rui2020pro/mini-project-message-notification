@@ -129,13 +129,15 @@
 
             /**
              * search only in the first column , second column , third column
+             * First column not sortable
              */ 
             "columnDefs": [
-                { "targets": [4], "searchable": false }
+                { "targets": [5], "searchable": false },
+                { "bSortable": false, "aTargets": [ 0 ] }
             ],
 
             /* active column position */
-            "order": [[2, "asc" ]]
+            "order": [[3, "asc" ]]
 
         });
 
