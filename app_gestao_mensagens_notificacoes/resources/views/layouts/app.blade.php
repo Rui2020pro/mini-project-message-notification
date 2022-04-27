@@ -78,9 +78,9 @@
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
 
                                     <!-- Editar Perfil -->
-                                    <a class="dropdown-item" href="{{ route('user.edit', Auth::user()->id) }}">
+                                    {{--<a class="dropdown-item" href="{{ route('user.edit', Auth::user()->id) }}">
                                         {{ __('Editar Perfil') }}
-                                    </a>
+                                    </a>--}}
 
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
@@ -108,12 +108,15 @@
 </html>
 
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
 
 <script>
 
     $(document).ready(function() {
+
 
         /**
          * DataTables
@@ -125,18 +128,69 @@
             },
 
             /**
-             * search only in the first column
+             * search only in the first column , second column , third column
              */ 
             "columnDefs": [
-                { "targets": [0], "searchable": false }
-            ]
+                { "targets": [4], "searchable": false }
+            ],
+
+            /* active column position */
+            "order": [[2, "asc" ]]
+
         });
+
+        $('#table-list-messages-body').sortable({
+            items: 'tr',
+            opacity: 0.6,
+            cursor: 'move',
+            update: function() {
+                var token = $('meta[name="csrf-token"]').attr('content');
+                var posArr = [];
+
+                $('#table-list-messages-body').find('tr').each(function() {
+                        
+                    var id = $(this).attr('id').replace('message-', '');
+                    console.log(id);
+                    posArr.push(id);
+                    
+                });
+
+                if (posArr.length > 0) {
+
+                    url = '{{ url('mensagens/updatepos') }}';
+                    console.log(posArr);
+                        
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        data: {
+                            _token: token,
+                            position: posArr
+                        },
+                        success: function(data) {
+                            // sweet alert toast success
+                            Swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000
+                            }).fire({
+                                title: 'Ordenação atualizada!',
+                                icon: 'success'
+                            });
+                        }
+                    });
+                }
+            }
+        });
+
+        $('#table-list-messages-body').disableSelection();
     });
 
-    // Detectar browser back and forward
-    /*window.onpopstate = function(event) {
-        alert(event.state.a);
-    }
-    console.log(window.history.length);
-    history.pushState({a:1}, '');*/
+        // Detectar browser back and forward
+        /*window.onpopstate = function(event) {
+            alert(event.state.a);
+        }
+        console.log(window.history.length);
+        history.pushState({a:1}, '');*/
 </script>

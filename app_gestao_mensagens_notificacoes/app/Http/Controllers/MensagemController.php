@@ -18,17 +18,17 @@ class MensagemController extends Controller
      */
     public function index()
     {
-        $count = 0;
+        // $count = 0;
 
         // if on redirect the success message has been shown, the message will be deleted
         if (session()->has('toast_success')) {
 
             // if we go to another url
             if(url()->previous() == url()->current()) {
-                var_dump(url()->previous());
-                var_dump(url()->current());
+                // var_dump(url()->previous());
+                // var_dump(url()->current());
 
-                // session()->forget('toast_success');
+                session()->forget('toast_success');
             }
 
 
@@ -70,7 +70,8 @@ class MensagemController extends Controller
         $mensagens = Mensagem::all()
                             ->where('user_id', auth()->user()->id)
                             ->where('deleted_at', null)
-                            ->sortByDesc('created_at');
+                            // sort By position
+                            ->sortBy('position');
 
         return view('mensagens.index', compact('mensagens'));
     }
@@ -222,6 +223,53 @@ class MensagemController extends Controller
 
         } else {
             return redirect()->route('mensagens.index')->with('toast_error', 'Mensagem não encontrada ou não pertence ao utilizador!');
+        }
+    }
+
+    /**
+     * Get the position of the message
+     */
+    public function updatePosition()
+    {
+        
+        /**
+         * Call Mensagem Model to update position
+         */
+        $mensagem = new Mensagem();
+
+        /**
+         * Get all messages by position
+         */
+        $posArr = $_POST['position'];
+
+        /**
+         * Count error or success messages
+         */
+        $successCount = 0;
+        $errorCount = 0;
+
+        /**
+         * Update position case posArr is not empty
+         */
+        if(is_array($posArr) && count($posArr) > 0) {
+            foreach($posArr as $position => $id) {
+                if($mensagem->setPosition($id, $position + 1)){
+                    $successCount++;
+                } else {
+                    $errorCount++;
+                }
+            }
+        }
+
+        /**
+         * Return response
+         * @return json
+         */
+        if($errorCount) {
+            return response()->json(['success' => false, 'message' => 'Erro ao atualizar posição.']);
+        }
+        if($successCount) {
+            return response()->json(['success' => true, 'message' => 'Posição atualizada com sucesso!']);
         }
     }
 }

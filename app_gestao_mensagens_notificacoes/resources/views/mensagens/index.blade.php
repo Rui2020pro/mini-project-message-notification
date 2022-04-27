@@ -4,21 +4,6 @@
 
 <div class="container">
 
-    <!-- Check session message -->
-    @if(session('toast_success'))
-        <div class="alert alert-success">
-            <strong>Sucesso!</strong>
-            {{
-                var_dump(url()->previous());
-            }}
-            @if(app('router')->getRoutes()->match(app('request')->create(URL::previous()))->getName() == 'mensagens')
-                {{
-                    var_dump(app('router')->getRoutes()->match(app('request')->create(URL::previous()))->getAction());
-                }}
-            @endif
-        </div>
-    @endif
-
     <div class="d-flex justify-content-between">
         <h3>Lista de Mensagens</h3>
         <a href="{{ route('mensagens.create') }}" class="btn btn-primary">
@@ -30,6 +15,7 @@
     <table class="table table-striped table-bordered table-hover table-condensed" id="table-list-messages">
         <thead>
             <tr>
+                <th></th>
                 <th>ID</th>
                 <th>Mensagem</th>
                 <th>Posição</th>
@@ -37,9 +23,13 @@
                 <th>Ações</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="table-list-messages-body">
             @foreach($mensagens as $mensagem)
-            <tr>
+            <tr class="table-row-messages" id="message-{{ $mensagem->id }}">
+                <!-- sortable icon -->
+                <td>
+                    <i class="fas fa-sort"></i>
+                </td>
                 <td>{{ $mensagem->id }}</td>
                 <td>{{ $mensagem->mensagem }}</td>
                 <td>{{ $mensagem->position }}</td>
