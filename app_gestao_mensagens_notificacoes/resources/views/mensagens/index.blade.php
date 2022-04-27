@@ -4,6 +4,21 @@
 
 <div class="container">
 
+    <!-- Check session message -->
+    @if(session('toast_success'))
+        <div class="alert alert-success">
+            <strong>Sucesso!</strong>
+            {{
+                var_dump(url()->previous());
+            }}
+            @if(app('router')->getRoutes()->match(app('request')->create(URL::previous()))->getName() == 'mensagens')
+                {{
+                    var_dump(app('router')->getRoutes()->match(app('request')->create(URL::previous()))->getAction());
+                }}
+            @endif
+        </div>
+    @endif
+
     <div class="d-flex justify-content-between">
         <h3>Lista de Mensagens</h3>
         <a href="{{ route('mensagens.create') }}" class="btn btn-primary">
@@ -39,12 +54,12 @@
                         Editar
                     </a>
                     <!-- Before delete msg , ask to the user with toast warning if he really wants to delete the msg -->
-                    <button type="button" class="btn btn-danger btn-xs" data-bs-toggle="modal" data-bs-target="#modal-delete-msg" data-id="{{ $mensagem->id }}" data-url="{{ route('mensagens.destroy', $mensagem->id) }}">
+                    <button type="button" class="btn btn-danger btn-xs" data-bs-toggle="modal" data-bs-target="#modal-delete-msg-{{ $mensagem->id }}">
                         <i class="fa fa-trash"></i>
                         Excluir
                     </button>
                     <!-- Modal -->
-                    <div class="modal fade" id="modal-delete-msg" tabindex="-1" role="dialog" aria-labelledby="modal-delete-msg-label" aria-hidden="true">
+                    <div class="modal fade" id="modal-delete-msg-{{$mensagem->id}}" tabindex="-1" role="dialog" aria-labelledby="modal-delete-msg-label" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -59,6 +74,7 @@
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                                     <form id="form-delete-msg" action="{{ route('mensagens.destroy', $mensagem->id) }}" method="POST">
+                                        {{ var_dump($mensagem->id) }}
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger">Excluir</button>
@@ -66,12 +82,12 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
                 </td>
             </tr>
             @endforeach
         </tbody>
     </table>
-
 </div>
 @include('sweetalert::alert')
 

@@ -6,6 +6,9 @@ use App\Models\Mensagem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use \App\Mail\NovaMensagemMail;
+use Illuminate\Contracts\Session\Session;
+use phpDocumentor\Reflection\DocBlock\Tags\Var_;
+
 class MensagemController extends Controller
 {
     /**
@@ -15,6 +18,54 @@ class MensagemController extends Controller
      */
     public function index()
     {
+        $count = 0;
+
+        // if on redirect the success message has been shown, the message will be deleted
+        if (session()->has('toast_success')) {
+
+            // if we go to another url
+            if(url()->previous() == url()->current()) {
+                var_dump(url()->previous());
+                var_dump(url()->current());
+
+                // session()->forget('toast_success');
+            }
+
+
+            // https://www.google.com/search?q=how+to+clear+session+messages+in+laravel+after+redirect+to+other+route&oq=how+to+clear+session+messages+in+laravel+after+redirect+to+other+route&aqs=chrome..69i57j69i60j69i61l2.724j0j7&sourceid=chrome&ie=UTF-8
+            
+            // Session()->forget('alert');
+
+            // echo '<pre>';
+            // var_dump(session()->get('alert'));
+            // var_dump(session()->get('alert')['config']);
+            // var_dump(session()->all());
+            // echo '</pre>';
+            
+            // add in session alert config show
+
+            // count the number of messages
+            /*$count = count(session()->get('alert'));
+
+            // echo '<pre>';
+            // echo 'Contagem: ' . $count;
+            // var_dump($count);
+            // echo '</pre>';
+            
+            // add a variable in session
+            // $times_to_show = 1;
+            // session()->put('times_to_show', $times_to_show);
+
+            // check if the alert has been displayed
+            // if (session()->get('alert')['config']['show'] == true) {
+                // if the alert has been displayed, the variable times_to_show will be increased
+                // $times_to_show = session()->get('times_to_show') + 1;
+                // session()->put('times_to_show', $times_to_show);
+            // }
+
+            // $count++;*/
+        }
+
         // recover only messages that are not deleted and order by created_at and limit to 10 and associated with user
         $mensagens = Mensagem::all()
                             ->where('user_id', auth()->user()->id)
@@ -68,7 +119,8 @@ class MensagemController extends Controller
             $email = auth()->user()->email;
             Mail::to($email)->send(new NovaMensagemMail($mensagem));
 
-            return redirect()->route('mensagens.show', $mensagem->id)->with('toast_success', 'Mensagem criada com sucesso!');
+            return redirect()->route('mensagens.show', $mensagem->id)->with('toast_success', 'Mensagem guardada com sucesso!');
+        
         } else{
             return redirect()->route('mensagens.create')->withErrors($validacao);
         }
@@ -156,13 +208,18 @@ class MensagemController extends Controller
      */
     public function destroy(int $id = 0 )
     {
-        // Before delete, ask if user really wants to delete using sweetalert
         $mensagem = Mensagem::find($id);
 
         if ($mensagem->user_id == auth()->user()->id && $mensagem->deleted_at == null) {
 
             $mensagem->delete();
-            return redirect()->route('mensagens.index')->with('toast_success', 'Mensagem apagada com sucesso!');
+
+            session()->flash('toast_success', 'Mensagem apagada com sucesso!');
+
+            // return redirect()->route('mensagens.index')->with('toast_success', 'Mensagem apagada com sucesso!');
+            // return redirect()->route('mensagens.index')->with('toast_success', 'Mensagem apagada com sucesso!');
+            return redirect()->route('mensagens.index');
+
         } else {
             return redirect()->route('mensagens.index')->with('toast_error', 'Mensagem não encontrada ou não pertence ao utilizador!');
         }
