@@ -7,7 +7,12 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Editar Perfil') }}</div>
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="float-right" style="margin: 0px">{{ __('Editar Perfil') }}</h6>
+                    <a href="{{ route('mensagens.index') }}" class="btn btn-primary">
+                        {{ __('Voltar') }}
+                    </a>
+                </div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('profile.update') }}">

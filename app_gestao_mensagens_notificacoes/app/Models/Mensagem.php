@@ -35,5 +35,7 @@ class Mensagem extends Model
         $mensagem = Mensagem::find($mensagem_id);
         $mensagem->position = $position;
         $mensagem->save();
+
+        return true;
     }
 }

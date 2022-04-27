@@ -4,6 +4,20 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
+
+            <!-- Check session message -->
+            @if(session('message'))
+                <div class="alert alert-success">
+                    {{ session('message') }}
+                </div>
+            @endif
+
+            <!-- Check session error -->
+            @if(session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
             
             <!-- Formulário de exibição de mensagens com o botão de edição e voltar para trás -->
             <div class="card">
@@ -21,7 +35,7 @@
                     </fieldset>
                 </div>
             </div>
-
+            @include('sweetalert::alert')
         </div>
     </div>
 </div>

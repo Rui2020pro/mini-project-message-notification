@@ -7,13 +7,20 @@
             
             <!-- Formulário de criação de mensagens -->
             <div class="card">
-                <div class="card-header">
-                    @if(isset($mensagem))
-                        Editar Mensagem
-                    @else
-                        Criar Mensagem
-                    @endif
-                </div>
+                <div class="card-header d-flex justify-content-between align-items-center">
+                        <h6 class="float-right" style="margin: 0px">
+                            @if(isset($mensagem))
+                                {{ __('Editar Mensagem') }}
+                            @else
+                                {{ __('Criar Mensagem') }}
+                            @endif
+                        </h6>
+                        <a href="{{ route('mensagens.index') }}" class="btn btn-primary">
+                            {{ __('Voltar') }}
+                        </a>
+    
+                    </div>
+                </div>          
 
                 <div class="card-body">
                     @if (session('status'))

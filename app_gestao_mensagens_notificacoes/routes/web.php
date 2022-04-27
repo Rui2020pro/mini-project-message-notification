@@ -2,6 +2,7 @@
 
 use App\Mail\EmailAuth;
 use Illuminate\Support\Facades\Route;
+use RealRashid\SweetAlert\Facades\Alert;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,9 +25,9 @@ Auth::routes(['verify' => true]);
 /**
  * Edit Profile Route
  */ 
-Route::resource('user', UserController::class)
+/*Route::resource('user', UserController::class)
     ->middleware('verified')
-    ->only(['edit', 'update']);
+    ->only(['edit', 'update']);*/
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware('verified');
 
@@ -34,6 +35,9 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
  * Mensagem Resource
  */
 Route::resource('mensagens', App\Http\Controllers\MensagemController::class)->middleware('auth')->middleware('verified');
+
+/* Add message route to update position */
+Route::post('mensagens/updatepos', [App\Http\Controllers\MensagemController::class, 'updatePosition'])->middleware('auth')->middleware('verified');
 
 
 /**

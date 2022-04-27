@@ -10,3 +10,8 @@ ul.pagination li.paginate_button:hover{
     border: none !important;
     background: none !important;
 }
+
+button.close{
+    background:none;
+    border:none;
+}
