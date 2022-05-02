@@ -78,9 +78,9 @@
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
 
                                     <!-- Editar Perfil -->
-                                    {{--<a class="dropdown-item" href="{{ route('user.edit', Auth::user()->id) }}">
+                                    <a class="dropdown-item" href="{{ route('user.edit') }}">
                                         {{ __('Editar Perfil') }}
-                                    </a>--}}
+                                    </a>
 
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
@@ -141,6 +141,10 @@
 
         });
 
+        /**
+         * Sortable
+         */
+
         $('#table-list-messages-body').sortable({
             items: 'tr',
             opacity: 0.6,
@@ -187,6 +191,40 @@
         });
 
         $('#table-list-messages-body').disableSelection();
+
+        /**
+         * Show Password
+         */
+        
+         $('#show_new_password').on('click', function() {
+            var password = $('#new_password');
+            var icon = $(this).find('i');
+
+            if (password.attr('type') == 'password') {
+                password.attr('type', 'text');
+                icon.removeClass('fa-eye-slash');
+                icon.addClass('fa-eye');
+            } else {
+                password.attr('type', 'password');
+                icon.removeClass('fa-eye');
+                icon.addClass('fa-eye-slash');
+            }
+        });
+
+        $('#show_password_confirm').on('click', function() {
+            var password = $('#password_confirmation');
+            var icon = $(this).find('i');
+
+            if (password.attr('type') == 'password') {
+                password.attr('type', 'text');
+                icon.removeClass('fa-eye-slash');
+                icon.addClass('fa-eye');
+            } else {
+                password.attr('type', 'password');
+                icon.removeClass('fa-eye');
+                icon.addClass('fa-eye-slash');
+            }
+        }); 
     });
 
         // Detectar browser back and forward

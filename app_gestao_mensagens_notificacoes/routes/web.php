@@ -16,8 +16,11 @@ use RealRashid\SweetAlert\Facades\Alert;
 */
 
 Route::get('/', function () {
-    // return view('welcome');
-    return view('/auth.login');
+    if (auth()->check()) {
+        return redirect('/home');
+    } else {
+        return redirect('/auth.login');
+    }
 });
 
 Auth::routes(['verify' => true]);
@@ -25,9 +28,14 @@ Auth::routes(['verify' => true]);
 /**
  * Edit Profile Route
  */ 
-/*Route::resource('user', UserController::class)
+Route::get('/profile/edit', [App\Http\Controllers\UserController::class, 'edit'])
+    ->middleware('auth')
     ->middleware('verified')
-    ->only(['edit', 'update']);*/
+    ->name('user.edit');
+Route::post('/profile/edit', [App\Http\Controllers\UserController::class, 'update'])
+    ->middleware('auth')
+    ->middleware('verified')
+    ->name('user.update');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware('verified');
 
@@ -39,10 +47,16 @@ Route::resource('mensagens', App\Http\Controllers\MensagemController::class)->mi
 /* Add message route to update position */
 Route::post('mensagens/updatepos', [App\Http\Controllers\MensagemController::class, 'updatePosition'])->middleware('auth')->middleware('verified');
 
-
 /**
  * Email Auth
  */
 Route::get('/email', function () {
     return new EmailAuth();
 });
+
+/**
+ * Default Route
+ */
+Route::get('/{any}', function () {
+    return redirect('/home');
+})->where('any', '.*');
