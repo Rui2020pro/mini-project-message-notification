@@ -78,9 +78,9 @@
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
 
                                     <!-- Editar Perfil -->
-                                    {{--<a class="dropdown-item" href="{{ route('user.edit', Auth::user()->id) }}">
+                                    <a class="dropdown-item" href="{{ route('user.edit') }}">
                                         {{ __('Editar Perfil') }}
-                                    </a>--}}
+                                    </a>
 
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
@@ -129,15 +129,21 @@
 
             /**
              * search only in the first column , second column , third column
+             * First column not sortable
              */ 
             "columnDefs": [
-                { "targets": [4], "searchable": false }
+                { "targets": [5], "searchable": false },
+                { "bSortable": false, "aTargets": [ 0,5 ] }
             ],
 
             /* active column position */
-            "order": [[2, "asc" ]]
+            "order": [[3, "asc" ]]
 
         });
+
+        /**
+         * Sortable
+         */
 
         $('#table-list-messages-body').sortable({
             items: 'tr',
@@ -185,12 +191,39 @@
         });
 
         $('#table-list-messages-body').disableSelection();
-    });
 
-        // Detectar browser back and forward
-        /*window.onpopstate = function(event) {
-            alert(event.state.a);
-        }
-        console.log(window.history.length);
-        history.pushState({a:1}, '');*/
+        /**
+         * Show Password
+         */
+        
+         $('#show_new_password').on('click', function() {
+            var password = $('#new_password');
+            var icon = $(this).find('i');
+
+            if (password.attr('type') == 'password') {
+                password.attr('type', 'text');
+                icon.removeClass('fa-eye-slash');
+                icon.addClass('fa-eye');
+            } else {
+                password.attr('type', 'password');
+                icon.removeClass('fa-eye');
+                icon.addClass('fa-eye-slash');
+            }
+        });
+
+        $('#show_password_confirm').on('click', function() {
+            var password = $('#password_confirmation');
+            var icon = $(this).find('i');
+
+            if (password.attr('type') == 'password') {
+                password.attr('type', 'text');
+                icon.removeClass('fa-eye-slash');
+                icon.addClass('fa-eye');
+            } else {
+                password.attr('type', 'password');
+                icon.removeClass('fa-eye');
+                icon.addClass('fa-eye-slash');
+            }
+        }); 
+    });
 </script>

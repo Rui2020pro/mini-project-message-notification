@@ -64,7 +64,6 @@
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                                     <form id="form-delete-msg" action="{{ route('mensagens.destroy', $mensagem->id) }}" method="POST">
-                                        {{ var_dump($mensagem->id) }}
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger">Excluir</button>
