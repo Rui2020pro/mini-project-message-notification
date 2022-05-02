@@ -133,7 +133,7 @@
              */ 
             "columnDefs": [
                 { "targets": [5], "searchable": false },
-                { "bSortable": false, "aTargets": [ 0 ] }
+                { "bSortable": false, "aTargets": [ 0,5 ] }
             ],
 
             /* active column position */
@@ -226,11 +226,4 @@
             }
         }); 
     });
-
-        // Detectar browser back and forward
-        /*window.onpopstate = function(event) {
-            alert(event.state.a);
-        }
-        console.log(window.history.length);
-        history.pushState({a:1}, '');*/
 </script>

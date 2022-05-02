@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -42,42 +43,36 @@ class UserController extends Controller
          * Build regras and feedback messages
          */
         $regras = [
-            'new_password' => 'string|min:6',
-            'password_confirmation' => 'required_with:password|same:new-password',
+            'new_password' => 'required|string|min:6',
+            'password_confirmation' => 'required_with:password|same:new_password',
         ];
 
         $feedback = [
+            'new_password.required' => 'A nova senha é obrigatória',
             'new_password.min' => 'A password deve ter no mínimo 6 caracteres',
             'password_confirmation.required_with' => 'A confirmação de password é obrigatória',
             'password_confirmation.same' => 'A confirmação de password não confere',
         ];
-
+    
         /**
          * Validate the request
          */
-        $validacao = $request->validate($regras, $feedback);
+        $validator = Validator::make($request->all(), $regras, $feedback);
 
-        echo '<pre>';
-        print_r($validacao);
-        echo '</pre>';
-        die("RUi");
+        /**
+         * If the validation fails, return the user to the edit page
+         */
+        if($validator->fails()) {
 
-        // amanhã vamos verificar se o usuário está tentando alterar a senha
+            return back()->with('toast_error', $validator->errors()->all())->withInput();
+        }
 
         /**
          * Update the user's password if the password respect the rules
          */
-        if ($validacao) {
-            $user->password = Hash::make($request->new_password);
-            dd($user);
-            die("Rui");
-            $user->save();
-
-            return redirect()->route('user.edit')->with('toast_success', 'Password alterada com sucesso!');
-        }else{
-            // return redirect route with all errors from validation and with old input with toast error
-            return redirect()->route('user.edit')->withErrors($validacao)->withInput()->with('toast_error', $validacao);
-        }
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+        return back()->with('toast_success', 'Password alterada com sucesso!');
 
     }
 }
